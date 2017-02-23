@@ -389,7 +389,7 @@ public class FastLeaderElection implements Election {
                                  * lagging behind.
                                  */
                                 if((ackstate == QuorumPeer.ServerState.LOOKING)
-                                        && (n.electionEpoch < logicalclock.get())){
+                                        && (n.electionEpoch < logicalclock.get())){ //如果你的electionEpoch比我小，说明你的选举轮数比我少，我要告诉你当前提议的leader是谁
                                     Vote v = getVote();
                                     QuorumVerifier qv = self.getQuorumVerifier();
                                     ToSend notmsg = new ToSend(ToSend.mType.notification,
@@ -402,7 +402,7 @@ public class FastLeaderElection implements Election {
                                             qv.toString().getBytes());
                                     sendqueue.offer(notmsg);
                                 }
-                            } else {
+                            } else {    //这种情况就是，我已经是leader或follower，我要告诉你leader是谁
                                 /*
                                  * If this server is not looking, but the one that sent the ack
                                  * is looking, then send back what it believes to be the leader.
